@@ -3,6 +3,7 @@ from urllib.parse import urljoin, urlencode
 from bs4 import BeautifulSoup
 from sensitive_detector import is_sensitive
 from detect_captcha import detect_captcha
+from sensitive_cookie_detector import is_sensitive_cookie
 
 # -----------------------------
 # Basic Config
@@ -28,10 +29,22 @@ def crawl(url):
     print(f"[Crawl] {url}")
 
     try:
-        res = requests.get(url, timeout=5, verify="C:/Users/desmo/AppData/Local/mkcert/rootCA.pem")  # Disable SSL verification for localhost
+        session = requests.session();
+        res = session.get(url, timeout=5, verify="C:/Users/desmo/AppData/Local/mkcert/rootCA.pem")  # Disable SSL verification for localhost
     except Exception as e:
         print(f"[Error] Failed to fetch {url}: {e}")
         return
+
+    #-- get sensitive cookies
+    sensitive_cookies = get_sensitive_cookies(session)
+    for cookie in sensitive_cookies:
+        REPORT.append({
+            "type": "Sensitive Cookie",
+            "url": url,
+            "cookie": cookie
+        })
+        print(f"[Sensitive Cookie] {cookie['name']} at {url}")
+
 
     soup = BeautifulSoup(res.text, "html.parser")
 
@@ -93,6 +106,26 @@ def test_form(page_url, form):
         test_payload(target_url, method, fields, payload, "XSS")
 
 
+#-----------------------------
+# get sensitive hidden fields
+#-----------------------------
+def get_sensitive_cookies(session):
+    sensitive = []
+
+    for cookie in session.cookies:
+        name = cookie.name.lower()
+        value = cookie.value
+
+        if is_sensitive_cookie(name, value, cookie):
+            sensitive.append({
+                "name": cookie.name,
+                "value": cookie.value,
+                "httponly": cookie.has_nonstandard_attr("HttpOnly"),
+                "secure": cookie.secure,
+                "samesite": cookie.get_nonstandard_attr("SameSite")
+            })
+
+    return sensitive
 
 
 

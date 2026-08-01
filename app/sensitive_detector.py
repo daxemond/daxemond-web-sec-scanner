@@ -7,6 +7,8 @@ def is_sensitive(name, value):
         r"jwt", r"key", r"secret", r"hash",
         r"salt", r"signature", r"sig",
         r"price", r"amount", r"fee",
+        r"otp", r"pin", r"password", r"pass",
+        r"credit", r"card", r"cvv", r"iban",
     ]
 
     # Check field name
