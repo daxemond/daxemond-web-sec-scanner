@@ -1,5 +1,23 @@
 # daxemond-web-sec-scanner
-This is a simple vulnerability scanner for web applications.
+A lightweight, Python‑based web vulnerability scanner designed for educational and testing purposes.
+It crawls pages, discovers forms, injects safe payloads, and reports potential weaknesses such as:
+<ul>
+<li>reflected parameters</li>
+<li>hidden sensitive fields</li>
+<li>missing CSRF protection</li>
+<li>weak form structures</li>
+<li>basic SQLi/XSS indicators</li>
+
+</ul>
+
+
+
+
+
+
+
+
+
 
 ## PREVIEW
 
