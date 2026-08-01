@@ -13,4 +13,4 @@ weak form structures
 basic SQLi/XSS indicators
 
 <h1>PREVIEW</h1>
-[![N|Solid](preview.jpg)]
+[(preview.jpg)]
